@@ -217,7 +217,7 @@
             <div class="info-section">
                 <div class="product-title">奈井江町のキャッチフレーズ「<span style="font-size: 2.5rem; font-weight: bold;">ずどーん</span>」サウンドボタン</div>
                 <div class="product-description">
-                    押すと「ずどーん！」という音が鳴るギミックボタンです。イベント会場や学校などで、コミュニケーションアイテムとして活用できます。オリジナルのボイスバージョンを作ればPR効果も抜群です。
+                    押すと「ずどーん！」という音が鳴るギミックボタンです。イベント会場や学校、オフィスなどで、コミュニケーションアイテムとして活用できます。奈井江町オリジナルボイスでPR効果も抜群です。
                 </div>
 
                 <div class="features">
@@ -227,12 +227,12 @@
                     </div>
                     <div class="feature">
                         <div class="feature-title">🎤 オリジナルボイス</div>
-                        <div class="feature-description">町長の声や太鼓の音など複数バージョンをランダムで再生可能</div>
+                        <div class="feature-description">町長の声やブラスバンドの演奏など色々なパターンで制作可能</div>
                     </div>
                 </div>
 
                 <div class="demo-note">
-                    ※ イラストをクリックすると実際に「ずどーん！」音声が再生されます。<br>
+                    ※ イラストをクリックすると3種類の「ずどーん！」音声がランダムに再生されます。<br>
                     音声が再生されない場合は、ブラウザの音声設定をご確認ください。
                 </div>
             </div>
@@ -241,16 +241,25 @@
 
     <script>
         let soundCount = 0;
-        let audio = null;
+        const sounds = [];
         
         // 音声ファイルを事前に読み込み
-        function preloadSound() {
-            audio = new Audio('https://github.com/pirkadesign/Zudon/raw/main/sounds/zudon1.wav');
-            audio.preload = 'auto';
+        function preloadSounds() {
+            const soundFiles = [
+                'https://github.com/pirkadesign/Zudon/raw/main/sounds/zudon1.wav',
+                'https://github.com/pirkadesign/Zudon/raw/main/sounds/zudon2.wav',
+                'https://github.com/pirkadesign/Zudon/raw/main/sounds/zudon3.mp3'
+            ];
+            
+            soundFiles.forEach((file, index) => {
+                const audio = new Audio(file);
+                audio.preload = 'auto';
+                sounds.push(audio);
+            });
         }
         
         // ページ読み込み時に音声を準備
-        window.addEventListener('load', preloadSound);
+        window.addEventListener('load', preloadSounds);
         
         function playZudoonSound() {
             // カウンターを更新
@@ -264,13 +273,18 @@
                 counter.style.color = '#ff0000';
             }, 200);
             
-            // 音声を再生
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play().catch(error => {
+            // ランダムに音声を選択して再生
+            if (sounds.length > 0) {
+                const randomIndex = Math.floor(Math.random() * sounds.length);
+                const selectedSound = sounds[randomIndex];
+                
+                selectedSound.currentTime = 0;
+                selectedSound.play().catch(error => {
                     console.log('音声再生エラー:', error);
                     console.log('ブラウザの自動再生ポリシーにより音声が再生できない場合があります');
                 });
+                
+                console.log(`ずどーん！ (${soundCount}回目) - 音声: ${randomIndex === 0 ? 'zudon1.wav' : randomIndex === 1 ? 'zudon2.wav' : 'zudon3.mp3'}`);
             }
             
             // 視覚的なエフェクトを作成
@@ -282,8 +296,6 @@
             setTimeout(() => {
                 image.style.animation = 'bounce 0.5s ease';
             }, 10);
-            
-            console.log(`ずどーん！ (${soundCount}回目)`);
         }
         
         function createSoundEffect() {
