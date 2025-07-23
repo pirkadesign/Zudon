@@ -1,1 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ずどーんサウンドボタン - デモページ</title>
+    <style>
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
 
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        .main-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+        }
+
+        .button-section {
+            flex: 0 0 auto;
+        }
+
+        .info-section {
+            flex: 1;
+            text-align: left;
+            max-width: 500px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .catchphrase {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .town-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .zudoon-image {
+            width: 200px;
+            height: auto;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .zudoon-image:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
+        }
+
+        .zudoon-image:active {
+            transform: scale(0.95);
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+
+        .digital-display {
+            position: static;
+            background: #000;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #333;
+            box-shadow: 
+                inset 0 0 10px rgba(255,0,0,0.3),
+                0 5px 15px rgba(0,0,0,0.3);
+            min-width: 60px;
+            text-align: center;
+        }
+
+
+
+        .product-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .product-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .product-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .feature-title {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .feature-description {
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .info-section {
+                text-align: center;
+            }
+        }
+
+        .demo-note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .sound-effect {
+            position: fixed;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        @keyframes soundEffect {
+            0% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% { 
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="button-section">
+                <div class="button-container">
+                    <img 
+                        src="https://github.com/pirkadesign/Zudon/raw/main/images/zudon_button.png" 
+                        alt="ずどーんボタン" 
+                        class="zudoon-image" 
+                        onclick="playZudoonSound()"
+                    >
+                    <div class="digital-display" id="counter">00</div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="product-title">奈井江町のキャッチフレーズ「<span style="font-size: 2.5rem; font-weight: bold;">ずどーん</span>」サウンドボタン</div>
+                <div class="product-description">
+                    押すと「ずどーん！」という音が鳴るギミックボタンです。イベント会場や学校などで、コミュニケーションアイテムとして活用できます。オリジナルのボイスバージョンを作ればPR効果も抜群です。
+                </div>
+
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-title">🎉 イベント活用</div>
+                        <div class="feature-description">お祭りやイベントで盛り上がりアイテムとして大活躍！</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">🎤 オリジナルボイス</div>
+                        <div class="feature-description">町長の声や太鼓の音など複数バージョンをランダムで再生可能</div>
+                    </div>
+                </div>
+
+                <div class="demo-note">
+                    ※ イラストをクリックすると実際に「ずどーん！」音声が再生されます。<br>
+                    音声が再生されない場合は、ブラウザの音声設定をご確認ください。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let soundCount = 0;
+        let audio = null;
+        
+        // 音声ファイルを事前に読み込み
+        function preloadSound() {
+            audio = new Audio('https://github.com/pirkadesign/Zudon/raw/main/sounds/zudon1.wav');
+            audio.preload = 'auto';
+        }
+        
+        // ページ読み込み時に音声を準備
+        window.addEventListener('load', preloadSound);
+        
+        function playZudoonSound() {
+            // カウンターを更新
+            soundCount++;
+            const counter = document.getElementById('counter');
+            counter.textContent = soundCount.toString().padStart(2, '0');
+            
+            // カウンター表示のフラッシュ効果
+            counter.style.color = '#00ff00';
+            setTimeout(() => {
+                counter.style.color = '#ff0000';
+            }, 200);
+            
+            // 音声を再生
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(error => {
+                    console.log('音声再生エラー:', error);
+                    console.log('ブラウザの自動再生ポリシーにより音声が再生できない場合があります');
+                });
+            }
+            
+            // 視覚的なエフェクトを作成
+            createSoundEffect();
+            
+            // ボタンにバウンス効果を追加
+            const image = document.querySelector('.zudoon-image');
+            image.style.animation = 'none';
+            setTimeout(() => {
+                image.style.animation = 'bounce 0.5s ease';
+            }, 10);
+            
+            console.log(`ずどーん！ (${soundCount}回目)`);
+        }
+        
+        function createSoundEffect() {
+            const effects = ['ずどーん！', 'ZUDON!', '🎉', '💥', '⚡'];
+            const effect = effects[Math.floor(Math.random() * effects.length)];
+            
+            const soundDiv = document.createElement('div');
+            soundDiv.className = 'sound-effect';
+            soundDiv.textContent = effect;
+            
+            // ランダムな位置に配置
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            soundDiv.style.left = x + 'px';
+            soundDiv.style.top = y + 'px';
+            
+            document.body.appendChild(soundDiv);
+            
+            // アニメーションを開始
+            soundDiv.style.animation = 'soundEffect 1s ease-out forwards';
+            
+            // 1秒後に要素を削除
+            setTimeout(() => {
+                if (document.body.contains(soundDiv)) {
+                    document.body.removeChild(soundDiv);
+                }
+            }, 1000);
+        }
+        
+        // CSSアニメーションを動的に追加
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes bounce {
+                0%, 20%, 60%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-20px); }
+                80% { transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
